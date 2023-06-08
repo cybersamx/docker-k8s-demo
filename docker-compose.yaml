@@ -1,0 +1,11 @@
+version: '3.7'
+
+services:
+  hello-go:
+    ports:
+      - 8080:8080
+    container_name: hello
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cybersamx/hello

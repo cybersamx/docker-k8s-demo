@@ -1,0 +1,27 @@
+# Common files to ignore for building a Node.js Docker image.
+
+# IDE
+**/.vscode
+**/.idea
+**/.editorconfig
+
+# Git
+**/.git
+
+# Docker
+# This optional. If want someone to understand the composition of the container, then remove Dockerfile
+# so that it is included in the image.
+Dockerfile*
+
+# CI
+**/bin
+**/coverage
+**/vendor
+
+# Config
+**/.env
+**/.aws
+
+# Project
+**/*.md
+**/LICENSE
