@@ -16,7 +16,7 @@ This project contains sample code for a docker and kubernetes workshop I am cond
 1. Test the application.
 
    ```shell
-   $ curl localhost:8080
+   $ curl localhost:3000
    ```
 
 #### Using Docker Compose
@@ -47,11 +47,14 @@ This project contains sample code for a docker and kubernetes workshop I am cond
 1. Run the app as a container.
 
    ```shell
-   $ docker run -d -p 8080:8080 --name hello hello  # Run the container
+   $ docker run -d -p 3000:3000 --rm --name hello hello  # Run the container
    $ docker ps  # List what docker containers are running locally
    $ docker stop hello
-   $ docker rm hello
    ```
+
+   > **Note**
+   >
+   > If we didn't use the `--rm` flag when we ran `docker run...`, we would need to run `docker rm hello` right after `docker stop hello`.
 
 ### Push the Image to a Container Registry
 
@@ -95,13 +98,25 @@ This project contains sample code for a docker and kubernetes workshop I am cond
    hello   3/3     3            3           8s
    ```
 
-   Run `curl localhost:8080` but we will get `Connection refused`. This is because we have not exposed the tcp port.
+   Run `curl localhost:3000` but we will get `Connection refused`. This is because we have not exposed the tcp port.
 
 1. Run the service.
 
    ```shell
    $ kubectl apply -f service.yaml
-   $ curl "$(kubectl get svc hello-service -o json | jq -r '.status.loadBalancer.ingress[0].ip'):8080"
+   $ curl "$(kubectl get svc hello-service -o json | jq -r '.status.loadBalancer.ingress[0].ip'):3000"
+   ```
+
+## Troubleshooting
+
+1. You get this error message `... listen tcp4 0.0.0.0:3000: bind: address already in use.`.
+
+   A docker container (this or another app is bound to port 3000). Run the following to remove the app container to free up the port.
+
+   ```shell
+   $ docker ps -a | grep 3000
+   $ docker stop hello  # Assuming that the name of the offending container is hello
+   $ docker rm hello
    ```
 
 ## Reference

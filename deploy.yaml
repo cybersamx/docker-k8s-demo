@@ -17,8 +17,9 @@ spec:
       containers:
         - name: hello
           image: cybersamx/hello:latest
+          imagePullPolicy: Always
           ports:
-            - containerPort: 8080
+            - containerPort: 3000
               protocol: TCP
           resources:
             limits:

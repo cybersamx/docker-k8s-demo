@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	defaultPort = 8080
+	defaultPort = 3000
 )
 
 func parseEnv() int64 {

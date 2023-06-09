@@ -4,13 +4,10 @@ FROM golang:1.20.5-alpine3.18 as build
 
 # Copy mod files.
 WORKDIR /src
-COPY go.mod ./
-
-# Install modules.
-RUN go mod tidy
 
 # Copy source files.
-COPY main.go ./
+COPY go.mod main.go ./
+#COPY ["go.mod", "main.go", "./"]
 
 # Build
 RUN go build -o hello
@@ -19,14 +16,20 @@ RUN go build -o hello
 
 FROM alpine:3.18
 
-# Add a user.
+# Add a group and user.
 # See https://stackoverflow.com/a/55757473/12429735
+RUN addgroup \
+    --system \
+    --gid "1001" \
+    "golang"
+
 RUN adduser \
     --disabled-password \
-    --gecos "" \
+    --system \
     --home "/app" \
     --shell "/sbin/nologin" \
     --no-create-home \
+    --uid "1001" \
     "golang"
 
 # Install tini.
@@ -40,7 +43,7 @@ COPY --from=build --chown=golang:golang /src/hello ./
 USER golang
 
 # Expose port.
-EXPOSE 8080
+EXPOSE 3000
 
 # Run Node.
 ENTRYPOINT ["/sbin/tini", "--"]
